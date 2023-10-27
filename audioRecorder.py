@@ -1,28 +1,28 @@
-# Run 'Before Experiment' code from code
 import sounddevice as sd
 import soundfile as sf
 import threading
 from queue import Queue
 import serial
+import sys
 
 class AudioRecorder:
     def __init__(self, filepath, mic_id, sample_rate, channels, arduino_port, baud_rate):
-        # Archivo de salida de audio
+        # Output audio file
         self.filepath = filepath
-        # ID del micrófono
+        # Microphone ID
         self.mic_id = mic_id
-        # Tasa de muestreo
+        # Sample rate
         self.sample_rate = sample_rate
-        # Número de canales
+        # Number of channels
         self.channels = channels
-        # Cola de audio
+        # Audio queue
         self.mic_queue = Queue()
-        # Bandera de grabación
+        # Recording flag
         self.recording = False
-        # Bandera de solicitud de detención
+        # Stop request flag
         self.stop_requested = False
         
-        # Conexión a la placa Arduino a través de comunicación serie
+        # Connection to the Arduino board via serial communication
         self._serial = serial.Serial(arduino_port, baud_rate)
 
     def callback(self, indata, frames, time, status):
@@ -35,7 +35,7 @@ class AudioRecorder:
         if not self.recording:
             self.recording = True
             self._send_pulse_to_arduino()
-            self.mic_queue = Queue()  # Reinicia la cola de audio
+            self.mic_queue = Queue()  # Reset the audio queue
             self.recording_thread = threading.Thread(target=self._record_audio)
             self.recording_thread.start()
 
@@ -45,9 +45,9 @@ class AudioRecorder:
             self._send_pulse_to_arduino()
 
     def _send_pulse_to_arduino(self):
-        # Mensaje a enviar a Arduino
+        # Message to send to Arduino
         message = "P"
-        # Envía el mensaje a Arduino
+        # Send the message to Arduino
         self._serial.write(message.encode())
 
     def _record_audio(self):

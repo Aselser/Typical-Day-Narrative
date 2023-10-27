@@ -1,8 +1,6 @@
-﻿#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
-This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on octubre 26, 2023, at 19:06
+﻿"""
+This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3), 
+    on octubre 27, 2023, at 11:57
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -12,27 +10,31 @@ If you publish work using this script the most relevant publication is:
 """
 
 # --- Import packages ---
-
 from psychopy import plugins
 plugins.activatePlugins()
-from psychopy import  gui, visual, core, data, logging, event
+from psychopy import gui, visual, core, data, logging
 from psychopy.tools import environmenttools
 from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
                                 STOPPED, FINISHED, PRESSED, RELEASED, FOREVER, priority)
 
 import os  # handy system and path functions
 import sys  # to get file system encoding
-from audioRecorder import AudioRecorder
+
 import psychopy.iohub as io
 from psychopy.hardware import keyboard
 
-# Connecting to the board
-puerto_arduino='COM16'
-baud_rate=115200
+# Run 'Before Experiment' code from code
+from psychopy import core
+import sys
+from audioRecorder import AudioRecorder
 
-# Variable para rastrear si estamos grabando
+# Configure connection to the board
+port = 'COM16'
+baud_rate = 115200
+
+# Recording Flag and Fs
 recording = False
-sample_rate = 44100  # Sample rate (adjust as needed)
+sample_rate = 44100
 
 # --- Setup global variables (available in all functions) ---
 # Ensure that relative paths start from the same directory as this script
@@ -77,6 +79,67 @@ def showExpInfoDlg(expInfo):
     expInfo.update(poppedKeys)
     # return expInfo
     return expInfo
+
+
+def setupData(expInfo, dataDir=None):
+    """
+    Make an ExperimentHandler to handle trials and saving.
+    
+    Parameters
+    ==========
+    expInfo : dict
+        Information about this experiment, created by the `setupExpInfo` function.
+    dataDir : Path, str or None
+        Folder to save the data to, leave as None to create a folder in the current directory.    
+    Returns
+    ==========
+    psychopy.data.ExperimentHandler
+        Handler object for this experiment, contains the data to save and information about 
+        where to save it to.
+    """
+    
+    # data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
+    if dataDir is None:
+        dataDir = _thisDir
+    filename = f'data/%s_%s/%s_%s' % (expInfo['Nombre'], expInfo['date'], expInfo['Nombre'], expInfo['date'])
+    # make sure filename is relative to dataDir
+    if os.path.isabs(filename):
+        dataDir = os.path.commonprefix([dataDir, filename])
+        filename = os.path.relpath(filename, dataDir)
+    
+    # an ExperimentHandler isn't essential but helps with data saving
+    thisExp = data.ExperimentHandler(
+        name=expName, version='',
+        extraInfo=expInfo, runtimeInfo=None,
+        savePickle=True, saveWideText=True,
+        dataFileName=dataDir + os.sep + filename, sortColumns='time'
+    )
+    thisExp.setPriority('', )
+    # return experiment handler
+    return thisExp
+
+
+def setupLogging(filename):
+    """
+    Setup a log file and tell it what level to log at.
+    
+    Parameters
+    ==========
+    filename : str or pathlib.Path
+        Filename to save log file and data files as, doesn't need an extension.
+    
+    Returns
+    ==========
+    psychopy.logging.LogFile
+        Text stream to receive inputs from the logging system.
+    """
+    # this outputs to the screen, not a file
+    logging.console.setLevel(logging.EXP)
+    # save a log file for detail verbose info
+    logFile = logging.LogFile(filename+'.log', level=logging.EXP)
+    
+    return logFile
+
 
 def setupWindow(expInfo=None, win=None):
     """
@@ -138,6 +201,7 @@ def setupInputs(expInfo, thisExp, win):
         Dictionary of input devices by name.
     """
     # --- Setup input devices ---
+    inputs = {}
     ioConfig = {}
     
     # Setup iohub keyboard
@@ -147,15 +211,14 @@ def setupInputs(expInfo, thisExp, win):
     if 'session' in expInfo:
         ioSession = str(expInfo['session'])
     ioServer = io.launchHubServer(window=win, **ioConfig)
-    
+       
     # create a default keyboard (e.g. to check for escape)
     defaultKeyboard = keyboard.Keyboard(backend='iohub')
     # return inputs dict
     return {
         'ioServer': ioServer,
-        'defaultKeyboard': defaultKeyboard
+        'defaultKeyboard': defaultKeyboard,
     }
-
 
 def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     """
@@ -196,9 +259,11 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     else:
         frameDur = 1.0 / 60.0  # could not measure, so guess
     
-    # --- Initialize components for Routine "Instrucciones" ---
-    texto_instrucciones = visual.TextStim(win=win, name='texto_instrucciones',
-        text='A continuación, te pedimos que nos cuentes un día típico. Espera a que aparezca el microfono para empezar a hablar.\n\nPulse ESPACIO para empezar a grabar y ESPACIO nuevamente cuando termines.',
+    # Start Code - component code to be run after the window creation
+    
+    # --- Initialize components for Routine "Instructions" ---
+    instructions_text = visual.TextStim(win=win, name='instructions_text',
+        text="A continuación, te pedimos que nos cuentes un día típico. Espera a que aparezca el micrófono para empezar a hablar\n Pulse ESPACIO para empezar a grabar y ESPACIO nuevamente cuando termines.",
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
@@ -206,7 +271,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         depth=0.0);
     start_rec = keyboard.Keyboard()
     
-    # --- Initialize components for Routine "Respuesta" ---
+    # --- Initialize components for Routine "Recording" ---
     image = visual.ImageStim(
         win=win,
         name='image', 
@@ -215,10 +280,18 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         color=[1,1,1], colorSpace='rgb', opacity=None,
         flipHoriz=False, flipVert=False,
         texRes=128.0, interpolate=True, depth=0.0)
+    # Run 'Begin Experiment' code from code
+    output_filename = f'data/%s_%s/%s_%s.wav' % (expInfo['Nombre'],
+        expInfo['date'], expInfo['Nombre'], expInfo['date'])  # Output file name
     
-    # --- Initialize components for Routine "Agradecimiento" ---
+    # Instance AudioRecorder
+    recorder = AudioRecorder(filepath=output_filename, mic_id=0, 
+        sample_rate=sample_rate, channels=1, arduino_port=port, baud_rate=baud_rate)
+    stop_rec = keyboard.Keyboard()
+    
+    # --- Initialize components for Routine "Aknowledgment" ---
     text = visual.TextStim(win=win, name='text',
-        text='¡Muchas gracias por participar!\n\nPresion ESPACIO para terminar el experimento',
+        text='¡Muchas gracias por participar!\n\nPulsa ESPACIO para terminar el experimento',
         font='Open Sans',
         pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0, 
         color='white', colorSpace='rgb', opacity=None, 
@@ -226,35 +299,27 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         depth=0.0);
     exit_exp = keyboard.Keyboard()
     
-    # Crear una instancia de la grabadora con los parámetros adecuados
-    mi_grabadora = AudioRecorder(filepath=filename[:-4]+'.wav', mic_id=0, 
-        sample_rate=sample_rate, channels=1, arduino_port=puerto_arduino, baud_rate=baud_rate)
-    stop_rec = keyboard.Keyboard()
-    
     # create some handy timers
     if globalClock is None:
         globalClock = core.Clock()  # to track the time since experiment started
     if ioServer is not None:
         ioServer.syncClock(globalClock)
-
     logging.setDefaultClock(globalClock)
     routineTimer = core.Clock()  # to track time remaining of each (possibly non-slip) routine
     win.flip()  # flip window to reset last flip timer
     # store the exact time the global clock started
     expInfo['expStart'] = data.getDateStr(format='%Y-%m-%d %Hh%M.%S.%f %z', fractionalSecondDigits=6)
-    
-    # --- Prepare to start Routine "Instrucciones" ---
-    continueRoutine = True
-
-    # update component parameters for each repeat
     thisExp.addData('t_start', globalClock.getTime())
-
+    
+    # --- Prepare to start Routine "Instructions" ---
+    continueRoutine = True
+    # update component parameters for each repeat
     start_rec.keys = []
     start_rec.rt = []
     _start_rec_allKeys = []
     # keep track of which components have finished
-    InstruccionesComponents = [texto_instrucciones, start_rec]
-    for thisComponent in InstruccionesComponents:
+    InstructionsComponents = [instructions_text, start_rec]
+    for thisComponent in InstructionsComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
         thisComponent.tStartRefresh = None
@@ -266,7 +331,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     _timeToFirstFrame = win.getFutureFlipTime(clock="now")
     frameN = -1
     
-    # --- Run Routine "Instrucciones" ---
+    # --- Run Routine "Instructions" ---
     routineForceEnded = not continueRoutine
     while continueRoutine:
         # get current time
@@ -276,21 +341,22 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
         # update/draw components on each frame
         
-        # *texto_instrucciones* updates
+        # *instructions_text* updates
         
-        # if texto_instrucciones is starting this frame...
-        if texto_instrucciones.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # if instructions_text is starting this frame...
+        if instructions_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
             # keep track of start time/frame for later
-            texto_instrucciones.frameNStart = frameN  # exact frame index
-            texto_instrucciones.tStart = t  # local t and not account for scr refresh
-            texto_instrucciones.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(texto_instrucciones, 'tStartRefresh')  # time at next scr refresh
+            instructions_text.frameNStart = frameN  # exact frame index
+            instructions_text.tStart = t  # local t and not account for scr refresh
+            instructions_text.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(instructions_text, 'tStartRefresh')  # time at next scr refresh
             # update status
-            texto_instrucciones.status = STARTED
-            texto_instrucciones.setAutoDraw(True)
+            instructions_text.status = STARTED
+            instructions_text.setAutoDraw(True)
+            thisExp.addData('t_instrucciones', globalClock.getTime())
         
-        # if texto_instrucciones is active this frame...
-        if texto_instrucciones.status == STARTED:
+        # if instructions_text is active this frame...
+        if instructions_text.status == STARTED:
             # update params
             pass
         
@@ -308,7 +374,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             # keyboard checking is just starting
             start_rec.clock.reset()  # now t=0
             start_rec.clearEvents(eventType='keyboard')
-
         if start_rec.status == STARTED:
             theseKeys = start_rec.getKeys(keyList=['space'], ignoreKeys=["escape"], waitRelease=False)
             _start_rec_allKeys.extend(theseKeys)
@@ -331,7 +396,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             routineForceEnded = True
             break
         continueRoutine = False  # will revert to True if at least one component still running
-        for thisComponent in InstruccionesComponents:
+        for thisComponent in InstructionsComponents:
             if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
                 continueRoutine = True
                 break  # at least one component has not yet finished
@@ -340,33 +405,31 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
     
-    # --- Ending Routine "Instrucciones" ---
-    for thisComponent in InstruccionesComponents:
+    # --- Ending Routine "Instructions" ---
+    for thisComponent in InstructionsComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-    
     # check responses
     if start_rec.keys in ['', [], None]:  # No response was made
         start_rec.keys = None
+
     
-    # the Routine "Instrucciones" was not non-slip safe, so reset the non-slip timer
+    # the Routine "Instructions" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
+            
     
-    # --- Prepare to start Routine "Respuesta" ---
+    
+    # --- Prepare to start Routine "Recording" ---
     continueRoutine = True
     # update component parameters for each repeat
-    thisExp.addData('start_recording', globalClock.getTime())
-    
     # Run 'Begin Routine' code from code
-    # Iniciar la grabación
-    mi_grabadora.start_recording()
     
     stop_rec.keys = []
     stop_rec.rt = []
     _stop_rec_allKeys = []
     # keep track of which components have finished
-    RespuestaComponents = [image, stop_rec]
-    for thisComponent in RespuestaComponents:
+    RecordingComponents = [image, stop_rec]
+    for thisComponent in RecordingComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
         thisComponent.tStartRefresh = None
@@ -378,7 +441,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     _timeToFirstFrame = win.getFutureFlipTime(clock="now")
     frameN = -1
     
-    # --- Run Routine "Respuesta" ---
+    # --- Run Routine "Recording" ---
     routineForceEnded = not continueRoutine
     while continueRoutine:
         # get current time
@@ -399,6 +462,9 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             win.timeOnFlip(image, 'tStartRefresh')  # time at next scr refresh
             # update status
             image.status = STARTED
+            # Start Recording
+            thisExp.addData('start_recording', globalClock.getTime())
+            recorder.start_recording()
             image.setAutoDraw(True)
         
         # if image is active this frame...
@@ -442,7 +508,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             routineForceEnded = True
             break
         continueRoutine = False  # will revert to True if at least one component still running
-        for thisComponent in RespuestaComponents:
+        for thisComponent in RecordingComponents:
             if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
                 continueRoutine = True
                 break  # at least one component has not yet finished
@@ -451,31 +517,31 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
     
-    # --- Ending Routine "Respuesta" ---
-    for thisComponent in RespuestaComponents:
+    # --- Ending Routine "Recording" ---
+    # Stop recording
+    recorder.stop_recording()
+    thisExp.addData('stop_recording', globalClock.getTime())
+    for thisComponent in RecordingComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-    thisExp.addData('stop_recording', globalClock.getTime())
-    
-    # Run 'End Routine' code from code
-    mi_grabadora.stop_recording()
     
     # check responses
     if stop_rec.keys in ['', [], None]:  # No response was made
         stop_rec.keys = None
     
-    # the Routine "Respuesta" was not non-slip safe, so reset the non-slip timer
+    
+    # the Routine "Recording" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     
-    # --- Prepare to start Routine "Agradecimiento" ---
+    # --- Prepare to start Routine "Aknowledgment" ---
     continueRoutine = True
-    
+    # update component parameters for each repeat
     exit_exp.keys = []
     exit_exp.rt = []
     _exit_exp_allKeys = []
     # keep track of which components have finished
-    AgradecimientoComponents = [text, exit_exp]
-    for thisComponent in AgradecimientoComponents:
+    AknowledgmentComponents = [text, exit_exp]
+    for thisComponent in AknowledgmentComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
         thisComponent.tStartRefresh = None
@@ -487,7 +553,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     _timeToFirstFrame = win.getFutureFlipTime(clock="now")
     frameN = -1
     
-    # --- Run Routine "Agradecimiento" ---
+    # --- Run Routine "Aknowledgment" ---
     routineForceEnded = not continueRoutine
     while continueRoutine:
         # get current time
@@ -524,7 +590,6 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             exit_exp.tStart = t  # local t and not account for scr refresh
             exit_exp.tStartRefresh = tThisFlipGlobal  # on global time
             win.timeOnFlip(exit_exp, 'tStartRefresh')  # time at next scr refresh
-        
             # update status
             exit_exp.status = STARTED
             # keyboard checking is just starting
@@ -537,6 +602,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 exit_exp.keys = _exit_exp_allKeys[-1].name  # just the last key pressed
                 exit_exp.rt = _exit_exp_allKeys[-1].rt
                 exit_exp.duration = _exit_exp_allKeys[-1].duration
+                thisExp.addData('acknowledgment_started', globalClock.getTime())
                 # a response ends the routine
                 continueRoutine = False
         
@@ -552,7 +618,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             routineForceEnded = True
             break
         continueRoutine = False  # will revert to True if at least one component still running
-        for thisComponent in AgradecimientoComponents:
+        for thisComponent in AknowledgmentComponents:
             if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
                 continueRoutine = True
                 break  # at least one component has not yet finished
@@ -561,27 +627,28 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
     
-    # --- Ending Routine "Agradecimiento" ---
-    for thisComponent in AgradecimientoComponents:
+    # --- Ending Routine "Aknowledgment" ---
+    thisExp.addData('acknowledgment_finished', globalClock.getTime())
+    thisExp.nextEntry()
+    for thisComponent in AknowledgmentComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-    thisExp.addData('t_end', globalClock.getTime())
-    
     # check responses
     if exit_exp.keys in ['', [], None]:  # No response was made
         exit_exp.keys = None
-
     
-    # the Routine "Agradecimiento" was not non-slip safe, so reset the non-slip timer
+    # the Routine "Aknowledgment" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     # Run 'End Experiment' code from code
-    # Cierra la conexión serie
-    mi_grabadora._serial.close()
+    # Closes serial connection
+    recorder._serial.close()
+    
     try:
-        # Detener la grabación
-        mi_grabadora.stop_recording()
+        # Stop recording if it didn't stop before
+        recorder.stop_recording()
     except:
         pass
+    
     # mark experiment as finished
     endExperiment(thisExp, win=win, inputs=inputs)
 
@@ -596,7 +663,10 @@ def saveData(thisExp):
         Handler object for this experiment, contains the data to save and information about 
         where to save it to.
     """
-    thisExp.saveAsWideText()
+    filename = thisExp.dataFileName
+    # these shouldn't be strictly necessary (should auto-save)
+    thisExp.saveAsWideText(filename + '.csv', delim='auto')
+    thisExp.saveAsPickle(filename)
 
 
 def endExperiment(thisExp, inputs=None, win=None):
@@ -646,9 +716,6 @@ def quit(thisExp, win=None, inputs=None, thisSession=None):
         # and win.timeOnFlip() tasks get executed before quitting
         win.flip()
         win.close()
-    if inputs is not None:
-        if 'eyetracker' in inputs and inputs['eyetracker'] is not None:
-            inputs['eyetracker'].setConnectionState(False)
     logging.flush()
     if thisSession is not None:
         thisSession.stop()
@@ -660,23 +727,15 @@ def quit(thisExp, win=None, inputs=None, thisSession=None):
 if __name__ == '__main__':
     # call all functions in order
     expInfo = showExpInfoDlg(expInfo=expInfo)
-    # Initialize a data file to record events
-    # ---
-    output_filename = f'data/{expInfo["Nombre"]}_{expInfo["date"]}/{expInfo["Nombre"]}_{expInfo["date"]}'  # Output file name
-    thisExp = data.ExperimentHandler(
-        name='TypicalDayNarrative',
-        extraInfo=expInfo,
-        dataFileName=output_filename,  # Data file name
-        savePickle=False,
-        saveWideText=True
-    )
+    thisExp = setupData(expInfo=expInfo)
+    logFile = setupLogging(filename=thisExp.dataFileName)
     win = setupWindow(expInfo=expInfo)
     inputs = setupInputs(expInfo=expInfo, thisExp=thisExp, win=win)
     run(
-        expInfo=expInfo,
-        thisExp=thisExp,
-        win=win,
+        expInfo=expInfo, 
+        thisExp=thisExp, 
+        win=win, 
         inputs=inputs
     )
-    saveData(thisExp)
+    saveData(thisExp=thisExp)
     quit(thisExp=thisExp, win=win, inputs=inputs)
