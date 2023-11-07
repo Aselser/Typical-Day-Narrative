@@ -28,9 +28,7 @@ from psychopy import core
 import sys
 from audioRecorder import AudioRecorder
 
-# Configure connection to the board
-port = 'COM16'
-baud_rate = 115200
+
 
 # Recording Flag and Fs
 recording = False
@@ -46,6 +44,7 @@ expInfo = {
     'Nombre': '',
     'Edad': '',
     'Lateralidad': ['Izquierda', 'Derecha'],
+    'COM': '',
     'date': data.getDateStr(),  # add a simple timestamp
     'expName': expName,
     'psychopyVersion': psychopyVersion,
@@ -284,6 +283,10 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     output_filename = f'data/%s_%s/%s_%s.wav' % (expInfo['Nombre'],
         expInfo['date'], expInfo['Nombre'], expInfo['date'])  # Output file name
     
+    # Configure connection to the board
+    port = 'COM' + expInfo['COM']
+    baud_rate = 115200
+
     # Instance AudioRecorder
     recorder = AudioRecorder(filepath=output_filename, mic_id=0, 
         sample_rate=sample_rate, channels=1, arduino_port=port, baud_rate=baud_rate)
@@ -301,7 +304,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     
     # create some handy timers
     if globalClock is None:
-        globalClock = core.Clock()  # to track the time since experiment started
+        globalClock = core.MonotonicClock()  # to track the time since experiment started
     if ioServer is not None:
         ioServer.syncClock(globalClock)
     logging.setDefaultClock(globalClock)
@@ -309,7 +312,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     win.flip()  # flip window to reset last flip timer
     # store the exact time the global clock started
     expInfo['expStart'] = data.getDateStr(format='%Y-%m-%d %Hh%M.%S.%f %z', fractionalSecondDigits=6)
-    thisExp.addData('t_start', globalClock.getTime())
+    #thisExp.addData('t_start', globalClock.getTime())
     
     # --- Prepare to start Routine "Instructions" ---
     continueRoutine = True
@@ -320,7 +323,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # keep track of which components have finished
     InstructionsComponents = [instructions_text, start_rec]
     for thisComponent in InstructionsComponents:
-        thisComponent.tStart = None
+        thisComponent.tStart = None 
         thisComponent.tStop = None
         thisComponent.tStartRefresh = None
         thisComponent.tStopRefresh = None
@@ -353,7 +356,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             # update status
             instructions_text.status = STARTED
             instructions_text.setAutoDraw(True)
-            thisExp.addData('t_instrucciones', globalClock.getTime())
+            thisExp.addData('t_instrucciones', globalClock.getTime(format="%S.%f"))
         
         # if instructions_text is active this frame...
         if instructions_text.status == STARTED:
@@ -463,7 +466,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             # update status
             image.status = STARTED
             # Start Recording
-            thisExp.addData('start_recording', globalClock.getTime())
+            thisExp.addData('start_recording', globalClock.getTime(format="%S.%f"))
             recorder.start_recording()
             image.setAutoDraw(True)
         
@@ -520,7 +523,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # --- Ending Routine "Recording" ---
     # Stop recording
     recorder.stop_recording()
-    thisExp.addData('stop_recording', globalClock.getTime())
+    thisExp.addData('stop_recording', globalClock.getTime(format="%S.%f"))
     for thisComponent in RecordingComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
@@ -602,7 +605,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
                 exit_exp.keys = _exit_exp_allKeys[-1].name  # just the last key pressed
                 exit_exp.rt = _exit_exp_allKeys[-1].rt
                 exit_exp.duration = _exit_exp_allKeys[-1].duration
-                thisExp.addData('acknowledgment_started', globalClock.getTime())
+                #thisExp.addData('acknowledgment_started', globalClock.getTime())
                 # a response ends the routine
                 continueRoutine = False
         
@@ -628,7 +631,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             win.flip()
     
     # --- Ending Routine "Aknowledgment" ---
-    thisExp.addData('acknowledgment_finished', globalClock.getTime())
+    thisExp.addData('acknowledgment_finished', globalClock.getTime(format="%S.%f"))
     thisExp.nextEntry()
     for thisComponent in AknowledgmentComponents:
         if hasattr(thisComponent, "setAutoDraw"):
