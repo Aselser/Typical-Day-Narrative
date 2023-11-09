@@ -357,6 +357,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             instructions_text.status = STARTED
             instructions_text.setAutoDraw(True)
             thisExp.addData('t_instrucciones', globalClock.getTime(format="%S.%f"))
+            recorder._send_pulse_to_arduino()
         
         # if instructions_text is active this frame...
         if instructions_text.status == STARTED:
@@ -633,6 +634,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # --- Ending Routine "Aknowledgment" ---
     thisExp.addData('acknowledgment_finished', globalClock.getTime(format="%S.%f"))
     thisExp.nextEntry()
+    recorder._send_pulse_to_arduino()
     for thisComponent in AknowledgmentComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)

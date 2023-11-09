@@ -250,6 +250,9 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     os.chdir(_thisDir)
     # get filename from ExperimentHandler for convenience
     filename = thisExp.dataFileName
+
+   
+
     frameTolerance = 0.001  # how close to onset before 'same' frame
     endExpNow = False  # flag for 'escape' or other condition => quit the exp
     # get frame duration from frame rate in expInfo
@@ -286,10 +289,11 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # Configure connection to the board
     port = 'COM' + expInfo['COM']
     baud_rate = 115200
-
     # Instance AudioRecorder
     recorder = AudioRecorder(filepath=output_filename, mic_id=0, 
         sample_rate=sample_rate, channels=1, arduino_port=port, baud_rate=baud_rate)
+
+    
     stop_rec = keyboard.Keyboard()
     
     # --- Initialize components for Routine "Aknowledgment" ---
@@ -334,7 +338,9 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     _timeToFirstFrame = win.getFutureFlipTime(clock="now")
     frameN = -1
     
+    
     # --- Run Routine "Instructions" ---
+    
     routineForceEnded = not continueRoutine
     while continueRoutine:
         # get current time
@@ -349,14 +355,17 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         # if instructions_text is starting this frame...
         if instructions_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
             # keep track of start time/frame for later
+            
             instructions_text.frameNStart = frameN  # exact frame index
             instructions_text.tStart = t  # local t and not account for scr refresh
             instructions_text.tStartRefresh = tThisFlipGlobal  # on global time
             win.timeOnFlip(instructions_text, 'tStartRefresh')  # time at next scr refresh
+            recorder._send_pulse_to_arduino()            
+            thisExp.addData('t_instrucciones', globalClock.getTime(format="%S.%f"))
             # update status
             instructions_text.status = STARTED
             instructions_text.setAutoDraw(True)
-            thisExp.addData('t_instrucciones', globalClock.getTime(format="%S.%f"))
+            
         
         # if instructions_text is active this frame...
         if instructions_text.status == STARTED:
@@ -524,6 +533,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # Stop recording
     recorder.stop_recording()
     thisExp.addData('stop_recording', globalClock.getTime(format="%S.%f"))
+    
     for thisComponent in RecordingComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
@@ -633,6 +643,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # --- Ending Routine "Aknowledgment" ---
     thisExp.addData('acknowledgment_finished', globalClock.getTime(format="%S.%f"))
     thisExp.nextEntry()
+    recorder._send_pulse_to_arduino()
     for thisComponent in AknowledgmentComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)

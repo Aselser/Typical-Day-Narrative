@@ -1,4 +1,4 @@
-const int pinSalida = 13;      // Pin de salida para el pulso
+const int pinSalida = 2;      // Pin de salida para el pulso
 const int duracionPulso = 500; // Duración del pulso en milisegundos
 
 bool habilitarInterrupcion = false;
