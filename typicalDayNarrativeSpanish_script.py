@@ -28,11 +28,9 @@ from psychopy import core
 import sys
 from audioRecorder import AudioRecorder
 
-
-
 # Recording Flag and Fs
 recording = False
-sample_rate = 44100
+sample_rate = 48000
 
 # --- Setup global variables (available in all functions) ---
 # Ensure that relative paths start from the same directory as this script
