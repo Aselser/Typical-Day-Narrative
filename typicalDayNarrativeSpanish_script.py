@@ -37,12 +37,12 @@ sample_rate = 48000
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 # Store info about the experiment session
 psychopyVersion = '2023.2.3'
-expName = 'diatipico'  # from the Builder filename that created this script
+expName = 'DiaTipico'  # from the Builder filename that created this script
 expInfo = {
     'Nombre': '',
     'Edad': '',
-    'Lateralidad': ['Izquierda', 'Derecha'],
-    'COM': '',
+    'Lateralidad': ['', 'Izquierda', 'Derecha'],
+    'COM': list(range(1,25)),
     'date': data.getDateStr(),  # add a simple timestamp
     'expName': expName,
     'psychopyVersion': psychopyVersion,
@@ -98,7 +98,7 @@ def setupData(expInfo, dataDir=None):
     # data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
     if dataDir is None:
         dataDir = _thisDir
-    filename = f'data/%s_%s/%s_%s' % (expInfo['Nombre'], expInfo['date'], expInfo['Nombre'], expInfo['date'])
+    filename = f'data/%s/%s_%s_%s' % (expInfo['Nombre'], expInfo['expName'], expInfo['Nombre'], expInfo['date'])
     # make sure filename is relative to dataDir
     if os.path.isabs(filename):
         dataDir = os.path.commonprefix([dataDir, filename])
@@ -281,8 +281,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         flipHoriz=False, flipVert=False,
         texRes=128.0, interpolate=True, depth=0.0)
     # Run 'Begin Experiment' code from code
-    output_filename = f'data/%s_%s/%s_%s.wav' % (expInfo['Nombre'],
-        expInfo['date'], expInfo['Nombre'], expInfo['date'])  # Output file name
+    output_filename = filename + ".wav"  # Output file name
     
     # Configure connection to the board
     port = 'COM' + expInfo['COM']
@@ -348,6 +347,8 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
         # update/draw components on each frame
         
+
+        
         # *instructions_text* updates
         
         # if instructions_text is starting this frame...
@@ -358,11 +359,13 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             instructions_text.tStart = t  # local t and not account for scr refresh
             instructions_text.tStartRefresh = tThisFlipGlobal  # on global time
             win.timeOnFlip(instructions_text, 'tStartRefresh')  # time at next scr refresh
-            recorder._send_pulse_to_arduino()            
-            thisExp.addData('t_instrucciones', globalClock.getTime(format="%S.%f"))
+                     
+            thisExp.addData('t_instrucciones', globalClock.getTime(format="%M:%S.%f%z"))
             # update status
             instructions_text.status = STARTED
             instructions_text.setAutoDraw(True)
+            recorder._send_pulse_to_arduino()  
+             
             
         
         # if instructions_text is active this frame...
@@ -473,7 +476,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             # update status
             image.status = STARTED
             # Start Recording
-            thisExp.addData('start_recording', globalClock.getTime(format="%S.%f"))
+            thisExp.addData('start_recording', globalClock.getTime(format="%M:%S.%f%z"))
             recorder.start_recording()
             image.setAutoDraw(True)
         
@@ -530,7 +533,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     # --- Ending Routine "Recording" ---
     # Stop recording
     recorder.stop_recording()
-    thisExp.addData('stop_recording', globalClock.getTime(format="%S.%f"))
+    thisExp.addData('stop_recording', globalClock.getTime(format="%M:%S.%f%z"))
     
     for thisComponent in RecordingComponents:
         if hasattr(thisComponent, "setAutoDraw"):
@@ -639,7 +642,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
             win.flip()
     
     # --- Ending Routine "Aknowledgment" ---
-    thisExp.addData('acknowledgment_finished', globalClock.getTime(format="%S.%f"))
+    thisExp.addData('acknowledgment_finished', globalClock.getTime(format="%M:%S.%f%z"))
     thisExp.nextEntry()
     recorder._send_pulse_to_arduino()
     for thisComponent in AknowledgmentComponents:
