@@ -1,6 +1,14 @@
-# Audio Recording Paradigm
+# Typical Day Paradigm
 
-The **Audio Recording Paradigm** was developed using PsychoPy Builder. It starts with a test window, to start the pulse train to see whether the recording devaice is working. Then, there is a instructional window, providing guidance on how to proceed. To initiate the recording, press the spacebar. Then, it records audio until the spacebar is pressed again. And finally, there is a Thank You Window.
+The **Typical Day Paradigm** was developed using PsychoPy Builder. It is designed to record audio of a patient describing a typical day while they have an implanted iEEG. The paradigm also sends markers to the recording device to coordinate the timing of the signals.
+
+The paradigm follows these steps:
+1. **Instructions**: Instructions are presented for testing the pulses.
+2. **Pulse Presentation**: 5 pulses are presented with Arduino signals and sound.
+3. **Confirmation**: A screen appears to confirm the perception of the pulses.
+4. **Instructions**: The paradigm continues with instructions for the patient.
+4. **Recording**: The patient's voice is recorded; at least 5 seconds must pass before the spacebar can be pressed to stop the recording.
+6. **Acknowledgments**: A thank you screen is displayed at the end.
 
 ## Interaction with Arduino
 Upon both the initiation and termination of the recording, the program sends the character 'P' to an Arduino device. The Arduino processes this character and responds by generating a pulse. This design choice allows the Arduino to be controlled via serial communication from both Python and MATLAB without the need for reprogramming based on the development language. The paradigm won't work if it can't establish serial communication.
