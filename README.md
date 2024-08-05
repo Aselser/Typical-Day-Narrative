@@ -1,9 +1,8 @@
 # Audio Recording Paradigm
 
-The **Audio Recording Paradigm** was developed using PsychoPy and then modified in order to store the data as a simple .csv in one line. It starts with an instructional window, providing guidance on how to proceed. To initiate the recording, press the spacebar. Then, it records audio until the spacebar is pressed again. And finally, there is a Thank You Window.
+The **Audio Recording Paradigm** was developed using PsychoPy Builder. It starts with a test window, to start the pulse train to see whether the recording devaice is working. Then, there is a instructional window, providing guidance on how to proceed. To initiate the recording, press the spacebar. Then, it records audio until the spacebar is pressed again. And finally, there is a Thank You Window.
 
 ## Interaction with Arduino
-
 Upon both the initiation and termination of the recording, the program sends the character 'P' to an Arduino device. The Arduino processes this character and responds by generating a pulse. This design choice allows the Arduino to be controlled via serial communication from both Python and MATLAB without the need for reprogramming based on the development language.
 
 ## Requirements
@@ -12,7 +11,7 @@ Before utilizing this paradigm, ensure that you have the necessary requirements 
 
 - Python 3.x
 - Required Python libraries found in the requirements.txt
-- Arduino Uno or a similar device (if applicable)
+- Arduino Uno or a similar device
 - Arduino IDE (for uploading code to the Arduino, if needed)
 
 ## Usage
@@ -26,23 +25,17 @@ Before utilizing this paradigm, ensure that you have the necessary requirements 
      ```bash
      pip install -r requirements.txt.
 
-   - In the code component or the script file, configure the Arduino port (`port`) and baud rate (`baud_rate`) as per your setup, and set the sampling frequency for your microphone.
+   - In the code component (`code`) you can configure baud rate (`baud_rate`) and set the sampling frequency (`sample_rate`) for your microphone (probably won't need it).
 
 3. **Execution:**
 
-   For the typical day narrative in English:
-      
-   ```bash
-   python typicalDayNarrative_script.py
-   ```
-   
    For the typical day narrative in Spanish:
    
    ```bash
-   python typicalDayNarrativeSpanish_script.py
+   python typicalDayNarrativeSpanish_lastrun.py
    ```
    
-      - NOTE: The Psychopy file (.psyexp) was uploaded as an example, it does not save the .csv or the log data
+      - NOTE: The Psychopy file (.psyexp) was uploaded so you can run it from the builder
 
 
 ## Contributions

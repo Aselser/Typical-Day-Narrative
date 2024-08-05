@@ -1,3 +1,3 @@
 1) Conectar Arduino
 2) En Administrador de dispositivos verificar el puert COM
-3) CORRER EL .PY EN EL CODER!!!!!!!!!
+3) Correr el .py en el coder o en el builder
