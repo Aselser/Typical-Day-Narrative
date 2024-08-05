@@ -2,3 +2,7 @@ psychopy==2021.2.3
 sounddevice==0.4.2
 soundfile==0.10.3.post1
 pyserial==3.5
+pandas
+psychopy
+threading
+numpy

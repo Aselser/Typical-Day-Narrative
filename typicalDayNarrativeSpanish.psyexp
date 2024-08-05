@@ -31,7 +31,7 @@
     <Param val="" valType="str" updates="None" name="backgroundImg"/>
     <Param val="avg" valType="str" updates="None" name="blendMode"/>
     <Param val="{'': ''}" valType="dict" updates="None" name="colPriority"/>
-    <Param val="$[0,0,0]" valType="color" updates="None" name="color"/>
+    <Param val="-1.0000, -1.0000, -1.0000" valType="color" updates="None" name="color"/>
     <Param val="rgb" valType="str" updates="None" name="colorSpace"/>
     <Param val="100.1.1.1" valType="str" updates="None" name="elAddress"/>
     <Param val="FILTER_LEVEL_2" valType="str" updates="None" name="elDataFiltering"/>
@@ -289,7 +289,7 @@
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
       </ImageComponent>
       <CodeComponent name="code" plugin="None">
-        <Param val="import sounddevice as sd&amp;#10;import soundfile as sf&amp;#10;import pandas as pd&amp;#10;import threading&amp;#10;from psychopy import core, event&amp;#10;from queue import Queue&amp;#10;import serial&amp;#10;import sys&amp;#10;from audioRecorder import AudioRecorder&amp;#10;import os" valType="extendedCode" updates="constant" name="Before Experiment"/>
+        <Param val="import pandas as pd&amp;#10;from audioRecorder import AudioRecorder" valType="extendedCode" updates="constant" name="Before Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
         <Param val="output_filename = f'data/%s_%s/%s_%s.wav' % (expInfo['Nombre'],&amp;#10;    expInfo['date'], expInfo['Nombre'], expInfo['date'])  # Output file name&amp;#10;    &amp;#10;# Configure connection to the board&amp;#10;port = 'COM' + str(expInfo['COM'])&amp;#10;baud_rate = 115200&amp;#10;&amp;#10;# Recording Flag and Fs&amp;#10;recording = False&amp;#10;sample_rate = 48000&amp;#10;&amp;#10;# Instance AudioRecorder&amp;#10;recorder = AudioRecorder(filepath=output_filename, mic_id=0, &amp;#10;    sample_rate=sample_rate, channels=1, arduino_port=port, baud_rate=baud_rate)" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>

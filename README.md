@@ -3,7 +3,7 @@
 The **Audio Recording Paradigm** was developed using PsychoPy Builder. It starts with a test window, to start the pulse train to see whether the recording devaice is working. Then, there is a instructional window, providing guidance on how to proceed. To initiate the recording, press the spacebar. Then, it records audio until the spacebar is pressed again. And finally, there is a Thank You Window.
 
 ## Interaction with Arduino
-Upon both the initiation and termination of the recording, the program sends the character 'P' to an Arduino device. The Arduino processes this character and responds by generating a pulse. This design choice allows the Arduino to be controlled via serial communication from both Python and MATLAB without the need for reprogramming based on the development language.
+Upon both the initiation and termination of the recording, the program sends the character 'P' to an Arduino device. The Arduino processes this character and responds by generating a pulse. This design choice allows the Arduino to be controlled via serial communication from both Python and MATLAB without the need for reprogramming based on the development language. The paradigm won't work if it can't establish serial communication.
 
 ## Requirements
 
