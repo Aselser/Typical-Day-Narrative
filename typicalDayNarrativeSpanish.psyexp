@@ -8,7 +8,7 @@
     <Param val="f'data/%s_%s/%s_%s' % (expInfo['Nombre'], expInfo['date'], expInfo['Nombre'], expInfo['date'])" valType="code" updates="None" name="Data filename"/>
     <Param val="True" valType="bool" updates="None" name="Enable Escape"/>
     <Param val="" valType="str" updates="None" name="End Message"/>
-    <Param val="{'Nombre': '', 'Edad': '', 'Lateralidad': &quot;['Izquierda', 'Derecha']&quot;, 'COM': 'list(range(1,25))'}" valType="code" updates="None" name="Experiment info"/>
+    <Param val="{'Nombre': '', 'Edad': '', 'Lateralidad': &quot;['Izquierda', 'Derecha']&quot;}" valType="code" updates="None" name="Experiment info"/>
     <Param val="True" valType="bool" updates="None" name="Force stereo"/>
     <Param val="True" valType="bool" updates="None" name="Full-screen window"/>
     <Param val="" valType="str" updates="None" name="HTML path"/>
@@ -289,9 +289,9 @@
         <Param val="from exp settings" valType="str" updates="None" name="units"/>
       </ImageComponent>
       <CodeComponent name="code" plugin="None">
-        <Param val="import pandas as pd&amp;#10;from audioRecorder import AudioRecorder" valType="extendedCode" updates="constant" name="Before Experiment"/>
+        <Param val="import pandas as pd&amp;#10;from audioRecorder import AudioRecorder&amp;#10;import serial.tools.list_ports&amp;#10;&amp;#10;def list_serial_ports():&amp;#10;    ports = serial.tools.list_ports.comports()&amp;#10;    arduino_ports = []&amp;#10;&amp;#10;    for port in ports:&amp;#10;        # You can add more checks here based on the specific attributes of your Arduino&amp;#10;        if 'Arduino' in port.description or 'CH340' in port.description:&amp;#10;            arduino_ports.append(port.device)&amp;#10;&amp;#10;    return arduino_ports[0]&amp;#10;" valType="extendedCode" updates="constant" name="Before Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Before JS Experiment"/>
-        <Param val="output_filename = f'data/%s_%s/%s_%s.wav' % (expInfo['Nombre'],&amp;#10;    expInfo['date'], expInfo['Nombre'], expInfo['date'])  # Output file name&amp;#10;    &amp;#10;# Configure connection to the board&amp;#10;port = 'COM' + str(expInfo['COM'])&amp;#10;baud_rate = 115200&amp;#10;&amp;#10;# Recording Flag and Fs&amp;#10;recording = False&amp;#10;sample_rate = 48000&amp;#10;&amp;#10;# Instance AudioRecorder&amp;#10;recorder = AudioRecorder(filepath=output_filename, mic_id=0, &amp;#10;    sample_rate=sample_rate, channels=1, arduino_port=port, baud_rate=baud_rate)" valType="extendedCode" updates="constant" name="Begin Experiment"/>
+        <Param val="output_filename = f'data/%s_%s/%s_%s.wav' % (expInfo['Nombre'],&amp;#10;    expInfo['date'], expInfo['Nombre'], expInfo['date'])  # Output file name&amp;#10;    &amp;#10;# Configure connection to the board&amp;#10;port = list_serial_ports()&amp;#10;baud_rate = 115200&amp;#10;&amp;#10;# Recording Flag and Fs&amp;#10;recording = False&amp;#10;sample_rate = 48000&amp;#10;&amp;#10;# Instance AudioRecorder&amp;#10;recorder = AudioRecorder(filepath=output_filename, mic_id=0, &amp;#10;    sample_rate=sample_rate, channels=1, arduino_port=port, baud_rate=baud_rate)" valType="extendedCode" updates="constant" name="Begin Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Experiment"/>
         <Param val="import {*} from 'pyo';&amp;#10;s = new Server({&quot;duplex&quot;: 1});&amp;#10;s.setInputDevice(0);&amp;#10;s.boot();&amp;#10;s.start();&amp;#10;output_filename = &quot;grabacion_audio.wav&quot;;&amp;#10;" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
         <Param val="# Start Recording&amp;#10;recorder.start_recording()&amp;#10;" valType="extendedCode" updates="constant" name="Begin Routine"/>

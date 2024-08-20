@@ -1,62 +1,56 @@
-# Typical Day Paradigm
+# Paradigma de Día Típico
 
-The **Typical Day Paradigm** was developed using PsychoPy Builder. It is designed to record audio of a patient describing a typical day while they have an implanted iEEG. The paradigm also sends markers to the recording device to coordinate the timing of the signals.
+El **Paradigma de Día Típico** fue desarrollado utilizando PsychoPy Builder. Está diseñado para grabar el audio de un paciente describiendo un día típico mientras tiene implantado un iEEG. El paradigma también envía marcadores al dispositivo de grabación para coordinar la sincronización de las señales.
 
-The paradigm follows these steps:
-1. **Instructions**: Instructions are presented for testing the pulses.
-2. **Pulse Presentation**: 5 pulses are presented with Arduino signals and sound.
-3. **Confirmation**: A screen appears to confirm the perception of the pulses.
-4. **Instructions**: The paradigm continues with instructions for the patient.
-4. **Recording**: The patient's voice is recorded; at least 5 seconds must pass before the spacebar can be pressed to stop the recording.
-6. **Acknowledgments**: A thank you screen is displayed at the end.
+![Esquema del paradigma](esquema.jpg)
 
-## Interaction with Arduino
-Upon both the initiation and termination of the recording, the program sends the character 'P' to an Arduino device. The Arduino processes this character and responds by generating a pulse. This design choice allows the Arduino to be controlled via serial communication from both Python and MATLAB without the need for reprogramming based on the development language. The paradigm won't work if it can't establish serial communication.
+El paradigma sigue estos pasos:
+1. **Instrucciones**: Se presentan instrucciones para probar la conexión con el aparato de registro.
+2. **Presentación de Pulsos**: Se envían 5 pulsos al aparato de registro con sonido simultaneo.
+3. **Confirmación**: Aparece una pantalla para confirmar la recepción de los pulsos.
+4. **Instrucciones**: El paradigma continúa con instrucciones para el paciente.
+5. **Grabación**: Se graba la voz del paciente; deben pasar al menos 5 segundos antes de que se pueda presionar la barra espaciadora para detener la grabación.
+6. **Agradecimientos**: Se muestra una pantalla de agradecimiento al final.
 
-## Requirements
+## Interacción con Arduino
+Tanto al iniciar como al finalizar la grabación, el programa envía el carácter 'P' a un dispositivo Arduino. El Arduino procesa este carácter y responde generando un pulso. Esta elección de diseño permite que el Arduino sea controlado a través de la comunicación serial tanto desde Python como desde MATLAB, sin necesidad de reprogramarlo según el lenguaje de desarrollo. El paradigma no funcionará si no puede establecer comunicación serial.
 
-Before utilizing this paradigm, ensure that you have the necessary requirements in place:
+## Requisitos
 
+Antes de utilizar este paradigma, los requisitos necesarios son:
 - Python 3.x
-- Required Python libraries found in the requirements.txt
-- Arduino Uno or a similar device
-- Arduino IDE (for uploading code to the Arduino, if needed)
+- Librerías de Python requeridas, que se encuentran en el archivo requirements.txt
+- Arduino Uno o un dispositivo similar
+- Arduino IDE (para cargar código en el Arduino, si es necesario)
 
-## Usage
+## Uso
 
-1. **Arduino Setup (if applicable):**
-   - Connect your Arduino Uno to the USB port of your computer.
-   - Upload the provided code located in the `resources` folder to your Arduino using the Arduino IDE. This code allows the Arduino to generate pulses in response to a command.
+1. **Configuración del Arduino (si aplica):**
+   - Conectar tu Arduino Uno al puerto USB de tu computadora.
+   - Cargar el código proporcionado que se encuentra en la carpeta `resources` al Arduino utilizando el Arduino IDE. Este código permite que el Arduino genere pulsos en respuesta a un comando.
 
-2. **Python Configuration:**
-   - Ensure that the required Python libraries are installed. You can install them using
+2. **Configuración de Python:**
+   - Asegúrate de que las librerías de Python requeridas estén instaladas. Puedes instalarlas usando:
      ```bash
      pip install -r requirements.txt.
+     ```
 
-   - In the code component (`code`) you can configure baud rate (`baud_rate`) and set the sampling frequency (`sample_rate`) for your microphone (probably won't need it).
+   - En el componente de código (`code`), se puede configurar la velocidad de transmisión (`baud_rate`) y establecer la frecuencia de muestreo (`sample_rate`) para el micrófono (probablemente no necesario).
 
-3. **Execution:**
+3. **Ejecución:**
 
-   For the typical day narrative in Spanish:
+   Para la narrativa del día típico en español:
    
    ```bash
    python typicalDayNarrativeSpanish_lastrun.py
-   ```
-   
-      - NOTE: The Psychopy file (.psyexp) was uploaded so you can run it from the builder
 
+ - NOTA: Se subió el archivo de PsychoPy (.psyexp) para ejecutarlo desde el builder.
 
-## Contributions
+## Contribuciones
+Este proyecto está abierto a contribuciones y mejoras. Para contribuir o reportar problemas, no dudes en abrir un pull request o un issue en GitHub.
 
-This project is open to contributions and enhancements. If you wish to contribute or report issues, please feel free to open a pull request or issue on GitHub.
+## Créditos
+El Paradigma de fue desarrollado por Agustina Selser, Coordinadora de TI del Centro de Neurociencias Cognitivas en la Universidad de San Andrés, Argentina.
 
-
-## Credits
-
-The Audio Recording Paradigm was developed by Agustina Selser, IT Coordinator of the Cognitive Neuroscience Center at the University of San Andrés, Argentina.
-
-## Citations
-
-Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
-        PsychoPy2: Experiments in behavior made easy Behav Res 51: 195. 
-        https://doi.org/10.3758/s13428-018-01193-y
+## Citaciones
+Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) PsychoPy2: Experiments in behavior made easy Behav Res 51: 195. https://doi.org/10.3758/s13428-018-01193-y """

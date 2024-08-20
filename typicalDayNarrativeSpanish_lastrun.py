@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on agosto 05, 2024, at 17:28
+    on agosto 19, 2024, at 23:25
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -36,6 +36,19 @@ from psychopy.hardware import keyboard
 # Run 'Before Experiment' code from code
 import pandas as pd
 from audioRecorder import AudioRecorder
+import serial.tools.list_ports
+
+def list_serial_ports():
+    ports = serial.tools.list_ports.comports()
+    arduino_ports = []
+
+    for port in ports:
+        # You can add more checks here based on the specific attributes of your Arduino
+        if 'Arduino' in port.description or 'CH340' in port.description:
+            arduino_ports.append(port.device)
+
+    return arduino_ports[0]
+
 # --- Setup global variables (available in all functions) ---
 # Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__))
@@ -46,7 +59,6 @@ expInfo = {
     'Nombre': '',
     'Edad': '',
     'Lateralidad': ['Izquierda', 'Derecha'],
-    'COM': list(range(1,25)),
     'date': data.getDateStr(),  # add a simple timestamp
     'expName': expName,
     'psychopyVersion': psychopyVersion,
@@ -112,7 +124,7 @@ def setupData(expInfo, dataDir=None):
     thisExp = data.ExperimentHandler(
         name=expName, version='',
         extraInfo=expInfo, runtimeInfo=None,
-        originPath='C:\\Users\\agust\\OneDrive\\Desktop\\CNC\\Paradigmas\\Typical Day Narrative\\typicalDayNarrativeSpanish_lastrun.py',
+        originPath='C:\\Users\\agust\\OneDrive\\Desktop\\CNC\\Paradigmas\\Python\\typical-day-narrative\\typicalDayNarrativeSpanish_lastrun.py',
         savePickle=True, saveWideText=True,
         dataFileName=dataDir + os.sep + filename, sortColumns='time'
     )
@@ -376,7 +388,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         expInfo['date'], expInfo['Nombre'], expInfo['date'])  # Output file name
         
     # Configure connection to the board
-    port = 'COM' + str(expInfo['COM'])
+    port = list_serial_ports()
     baud_rate = 115200
     
     # Recording Flag and Fs
